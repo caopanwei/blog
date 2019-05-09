@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="keywords" content="3.Redis哨兵机制详解" />
+	<meta name="description" content="3.Redis哨兵机制详解" />
+	<!-- 网页标签标题 -->
+	<title>3.Redis哨兵机制详解</title>
+	<link rel="shortcut icon" href="/img/docsite.ico"/>
+	<link rel="stylesheet" href="/build/documentation.css" />
+</head>
+<body>
+	<div id="root"><div class="documentation-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/zh-cn/index.html"><img class="logo" src="/img/dubbo_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">En</span><div class="header-menu"><img class="header-menu-toggle" src="/img/system/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/zh-cn/index.html" target="_self">首页</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/zh-cn/docs/demo1.html" target="_self">文档</a></li><li class="menu-item menu-item-normal"><a href="/zh-cn/blog/index.html" target="_self">博客</a></li><li class="menu-item menu-item-normal"><a href="/zh-cn/community/index.html" target="_self">社区</a></li></ul></div></div></header><div class="bar"><div class="bar-body"><img src="/img/system/docs.png" class="front-img"/><span>文档</span><img src="/img/system/docs.png" class="back-img"/></div></div><section class="content-section"><div class="sidemenu"><div class="sidemenu-toggle"><img src="https://img.alicdn.com/tfs/TB1E6apXHGYBuNjy0FoXXciBFXa-200-200.png"/></div><ul><li class="menu-item menu-item-level-1"><span>技术专题</span><ul><li style="height:108px;overflow:hidden" class="menu-item menu-item-level-2"><span>redis<img style="transform:rotate(0deg)" class="menu-toggle" src="/img/system/arrow_down.png"/></span><ul><li class="menu-item menu-item-level-3"><a href="/zh-cn/docs/redis/redis1.html" target="_self">1.Redis从基础到进阶</a></li><li class="menu-item menu-item-level-3"><a href="/zh-cn/docs/redis/redis2.html" target="_self">2.Redis主从模式详解</a></li></ul></li></ul></li><li class="menu-item menu-item-level-1"><span>面试专题</span><ul></ul></li></ul></div><div class="doc-content markdown-body"><h1>Redis哨兵机制详解</h1>
+<h2>1.哨兵机制(sentinel)的高可用</h2>
+<h3>1.1原理</h3>
+<p>原理：当主节点出现故障时，由Redis Sentinel自动完成故障发现和转移，并通知应用方，实现高可用性。
+<img src="https://gitee.com/cpw/commonimage/raw/master/QQ20190420-171132@2x.png" alt=""></p>
+<h3>1.2哨兵Sentinel的作用</h3>
+<p>哨兵有三个定时监控任务完成对各节点的发现和监控。
+<img src="https://gitee.com/cpw/commonimage/raw/master/QQ20190420-171433@2x.png" alt=""></p>
+<h4>哨兵主观下线</h4>
+<p><img src="https://gitee.com/cpw/commonimage/raw/master/QQ20190420-171642@2x.png" alt="">
+主观下线后，不准确，不会做故障转移</p>
+<h4>哨兵客观下线</h4>
+<p><img src="https://gitee.com/cpw/commonimage/raw/master/QQ20190420-171732@2x.png" alt=""></p>
+<h3>1.3哨兵选举流程</h3>
+<p><img src="https://gitee.com/cpw/commonimage/raw/master/QQ20190420-172122@2x.png" alt=""></p>
+<h3>1.4故障转移流程</h3>
+<p>1.由Sentinel节点定期监控发现主节点是否出现故障
+<img src="https://gitee.com/cpw/commonimage/raw/master/QQ20190420-202559@2x.png" alt="">
+sentinel会向master发送心跳PING来确认master是否存活,如果master在&quot;一定时间范围&quot;内不回应PING或者是回复了一个错误消息,那么这个sentinel会主观地(单方面)的认为这个master已经不可用了</p>
+<p>2.当主节点出现故障,假设3个Sentinel节点共同选举了Sentinel3为领导者,负责处理主节点的故障转移
+<img src="https://gitee.com/cpw/commonimage/raw/master/QQ20190420-202723@2x.png" alt=""></p>
+<p>3.由Sentinel3领导者节点执行故障转移,过程和主从复制一样,但是自动执行
+<img src="https://gitee.com/cpw/commonimage/raw/master/QQ20190420-202844@2x.png" alt="">
+4.故障转移后的拓扑结构图
+<img src="https://gitee.com/cpw/commonimage/raw/master/QQ20190420-202943@2x.png" alt=""></p>
+<p>5.故障转移详细流程
+<img src="https://gitee.com/cpw/commonimage/raw/master/QQ20190420-203034@2x.png" alt=""></p>
+<h2>2.RedisSentinel安装与部署</h2>
+<p>这里以3个Sentinel节点,2个从节点,1个主节点为例进行安装和部署
+<img src="https://gitee.com/cpw/commonimage/raw/master/QQ20190420-203507@2x.png" alt=""></p>
+<h3>2.1搭建1主2从的主从复制</h3>
+<pre><code>先搭建好一主两从redis的主从复制，和之前复制的搭建一样，搭建方式如下：
+A主节点6379节点（/usr/local/bin/conf/redis6379.conf）：
+      修改 requirepass 12345678，注释掉bind 192.168.42.111 
+B从节点redis6380.conf和redis6381.conf:
+      修改 requirepass 12345678 ,注释掉#bind 192.168.42.111, 
+      加上masterauth 12345678 ,加上slaveof 192.168.42.111 6379
+注意：当主从起来后，主节点可读写，从节点只可读不可写
+</code></pre>
+<h3>2.2哨兵机制核心配置</h3>
+<pre><code>redis sentinel哨兵机制配置(也是3个节点)：
+   /usr/local/bin/conf/sentinel_26379.conf  
+   /usr/local/bin/conf/sentinel_26380.conf
+   /usr/local/bin/conf/sentinel_26381.conf
+将三个文件的端口改成: 26379   26380   26381
+sentinel monitor mymaster 192.168.42.111 6379 2  //监听主节点6379
+sentinel auth-pass mymaster 12345678     //连接主节点时的密码
+三个配置除端口外，其它一样
+配完此脚本，哨兵机制可正常启动运行。
+</code></pre>
+<h3>2.3哨兵其他配置</h3>
+<pre><code>sentinel monitor mymaster 192.168.42.111 6379 2  //监控主节点的IP地址端口
+sentinel auth-pass mymaster 12345678  //sentinel连主节点的密码
+sentinel config-epoch mymaster 2      //执行故障转移时， 最多可以有多少个从节点同时对新的主节点进行数据同步
+sentinel leader-epoch mymaster 2
+sentinel failover-timeout mymaster 180000 //故障转移超时时间180s，                            
+    a,如果转移超时失败，下次转移时时间为之前的2倍；
+    b,从节点变主节点时，从节点执行slaveof no one命令一直失败的话，当时间超过180S时，则故障转移失败
+    c,从节点复制新主节点时间超过180S转移失败
+sentinel down-after-milliseconds mymaster 300000//sentinel节点定期向主节点ping命令
+</code></pre>
+<h3>2.4RedisSentinel节点测试</h3>
+<pre><code>测试：kill -9 6379  杀掉6379的redis服务
+看日志是分配6380 还是6381做为主节点，当6379服务再启动时，已变成从节点
+
+假设6380升级为主节点:
+进入6380&gt;info replication     
+         role:master
+打开sentinel_26379.conf等三个配置，
+     sentinel monitor mymaster 192.168.42.111 6380 2 //有2个sentinel认为master下线
+打开redis6379.conf等三个配置, slaveof 127.0.0.1 6380,也变成了6380
+注意：生产环境建议让redis Sentinel部署到不同的物理机上。
+
+坑点：sentinel monitor mymaster 192.168.42.111 6379 2 
+     //切记将IP不要写成127.0.0.1
+不然使用JedisSentinelPool取jedis连接的时候会变成取127.0.0.1 6379的错误地址
+</code></pre>
+<h3>2.5RedisSentinel如何监控2个redis主节点</h3>
+<p>我们以3个Sentinel节点、2个从节点、1个主节点为例进行安装部署
+<img src="https://gitee.com/cpw/commonimage/raw/master/QQ20190421-000216@2x.png" alt="">
+原配置加上一句：sentinel monitor mymasterB 192.168.1.112 6379 2</p>
+<h3>3.哨兵的API</h3>
+<pre><code> 命令：redis-cli -p 26379  //进入哨兵的命令模式，使用redis-cli进入
+
+  26379&gt; sentinel masters或sentinel master mymaster
+  26379&gt; sentinel slaves mymaster 
+  26379&gt; sentinel sentinels mymaster //查sentinel节点集合(不包括当前26379)
+  26379&gt; sentinel failover mymaster //对主节点强制故障转移，没和其它节点协商
+
+./redis-cli -p 26380 shutdown //关闭
+</code></pre>
+</div></section><footer class="footer-container"><div class="footer-body"><img src="/img/dubbo_gray.png"/><div class="cols-container"><div class="col col-12"><h3>免责声明</h3><p>免责声明的具体内容</p></div><div class="col col-6"><dl><dt>文档</dt><dd><a href="/zh-cn/docs/demo1.html" target="_self">概览</a></dd><dd><a href="/zh-cn/docs/demo2.html" target="_self">快速开始</a></dd><dd><a href="/zh-cn/docs/dir/demo3.html" target="_self">开发者指南</a></dd></dl></div><div class="col col-6"><dl><dt>资源</dt><dd><a href="/zh-cn/blog/index.html" target="_self">博客</a></dd><dd><a href="/zh-cn/community/index.html" target="_self">社区</a></dd></dl></div></div><div class="copyright"><span>Copyright © 2018 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span></div></div></footer></div></div>
+	<script src="https://f.alicdn.com/react/15.4.1/react-with-addons.min.js"></script>
+	<script src="https://f.alicdn.com/react/15.4.1/react-dom.min.js"></script>
+	<script>
+		window.rootPath = '';
+  </script>
+	<script src="/build/documentation.js"></script>
+</body>
+</html>

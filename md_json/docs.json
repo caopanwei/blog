@@ -31,6 +31,26 @@
       "filename": "demo3.md",
       "link": "/zh-cn/docs/dir/demo3.html",
       "meta": {}
+    },
+    {
+      "filename": "redis1.md",
+      "link": "/zh-cn/docs/redis/redis1.html",
+      "meta": {}
+    },
+    {
+      "filename": "redis2.md",
+      "link": "/zh-cn/docs/redis/redis2.html",
+      "meta": {}
+    },
+    {
+      "filename": "redis3.md",
+      "link": "/zh-cn/docs/redis/redis3.html",
+      "meta": {}
+    },
+    {
+      "filename": "redis4.md",
+      "link": "/zh-cn/docs/redis/redis4.html",
+      "meta": {}
     }
   ]
 }

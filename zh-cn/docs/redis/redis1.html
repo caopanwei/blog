@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="keywords" content="redis1" />
+	<meta name="description" content="redis1" />
+	<!-- 网页标签标题 -->
+	<title>redis1</title>
+	<link rel="shortcut icon" href="/img/docsite.ico"/>
+	<link rel="stylesheet" href="/build/documentation.css" />
+</head>
+<body>
+	<div id="root"><div class="documentation-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/zh-cn/index.html"><img class="logo" src="/img/dubbo_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">En</span><div class="header-menu"><img class="header-menu-toggle" src="/img/system/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/zh-cn/index.html" target="_self">首页</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/zh-cn/docs/demo1.html" target="_self">文档</a></li><li class="menu-item menu-item-normal"><a href="/zh-cn/blog/index.html" target="_self">博客</a></li><li class="menu-item menu-item-normal"><a href="/zh-cn/community/index.html" target="_self">社区</a></li></ul></div></div></header><div class="bar"><div class="bar-body"><img src="/img/system/docs.png" class="front-img"/><span>文档</span><img src="/img/system/docs.png" class="back-img"/></div></div><section class="content-section"><div class="sidemenu"><div class="sidemenu-toggle"><img src="https://img.alicdn.com/tfs/TB1E6apXHGYBuNjy0FoXXciBFXa-200-200.png"/></div><ul><li class="menu-item menu-item-level-1"><span>技术专题</span><ul><li style="height:108px;overflow:hidden" class="menu-item menu-item-level-2"><span>redis<img style="transform:rotate(0deg)" class="menu-toggle" src="/img/system/arrow_down.png"/></span><ul><li class="menu-item menu-item-level-3"><a href="/zh-cn/docs/redis/redis1.html" target="_self">1.Redis从基础到进阶</a></li><li class="menu-item menu-item-level-3"><a href="/zh-cn/docs/redis/redis2.html" target="_self">2.Redis主从模式详解</a></li></ul></li></ul></li><li class="menu-item menu-item-level-1"><span>面试专题</span><ul></ul></li></ul></div><div class="doc-content markdown-body"><h1>Redis从基础到进阶</h1>
+<h2>1.Redis介绍及入门</h2>
+<h3>1.1 Redis是什么?</h3>
+<p>Redis是一个开源的使用ANSI C语言编写、支持网络、可基于内存亦可持久化的日志型、Key-Value数据库，并提供多种语言的API
+1，Redis安装在磁盘；
+2，Redis数据存储在内存。</p>
+<h3>1.2Redis特性</h3>
+<p>redis是一种基于键值对（key-value）数据库，其中value可以为string、hash、list、set、zset等多种数据结构，可以满足很多应用场景。还提供了键过期，发布订阅，事务，流水线等附加功能.<br>
+特性：<br>
+1〉速度快<br>
+2〉键值对的数据结构服务器<br>
+3〉丰富的功能：<br>
+4〉简单稳定<br>
+5〉持久化<br>
+6〉主从复制<br>
+8〉高可用和分布式转移<br>
+9〉客户端语言多</p>
+<h3>1.3使用场景</h3>
+<p>1，缓存数据库<br>
+2，排行榜<br>
+3，计数器应用<br>
+4，社交网络<br>
+5，消息队列</p>
+<h3>1.4Redis安装</h3>
+<p>此处不在详细编写,可直接百度</p>
+<h3>1.5Redis配置、启动、操作、关闭</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">可执行文件</th>
+<th style="text-align:center">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">redis-server</td>
+<td style="text-align:center">启动redis</td>
+</tr>
+<tr>
+<td style="text-align:left">redis-cli</td>
+<td style="text-align:center">redis命令行客户端</td>
+</tr>
+<tr>
+<td style="text-align:left">redis-benchmark</td>
+<td style="text-align:center">基准测试工具</td>
+</tr>
+<tr>
+<td style="text-align:left">redis-check-aof</td>
+<td style="text-align:center">AOF持久化文件检测和修复工具</td>
+</tr>
+<tr>
+<td style="text-align:left">redis-check-dump</td>
+<td style="text-align:center">RDB持久化文件检测和修复工具</td>
+</tr>
+<tr>
+<td style="text-align:left">redis-sentinel</td>
+<td style="text-align:center">启动哨兵</td>
+</tr>
+<tr>
+<td style="text-align:left">redis-trib</td>
+<td style="text-align:center">cluster集群构建工具</td>
+</tr>
+</tbody>
+</table>
+<h2>2.Redis数据结构及常用命令</h2>
+<h3>2.1数据结构-字符串(String)</h3>
+<p>字符串类型：实际上可以是字符串（包括XML JSON），还有数字（整形 浮点数），二进制（图片 音频 视频），最大不能超过512MB.</p>
+<h4>设值命令</h4>
+<p>set age 23 ex 10  //10秒后过期  px 10000 毫秒过期<br>
+setnx name test  //不存在键name时，返回1设置成功；存在的话失败0<br>
+set age 25 xx      //存在键age时，返回1成功</p>
+<h4>获值命令</h4>
+<p>get age //存在则返回value, 不存在返回null<br>
+批量设值：mset country china city beijing<br>
+批量获取：mget country city address //返回china  beigjin, address为nil</p>
+<h4>计数</h4>
+<p>incr age //必须为整数自加1，非整数返回错误，无age键从0自增返回1<br>
+decr age //整数age减1<br>
+incrby age 2 //整数age+2<br>
+decrby age 2//整数age -2<br>
+incrbyfloat score 1.1 <a href="//xn--score+1-js9lu04n44g.1">//浮点型score+1.1</a></p>
+<h4>追加</h4>
+<p>append追加指令：<br>
+set name hello; append name world //追加后成helloworld<br>
+字符串长度：<br>
+set hello “世界”；strlen hello//结果6，每个中文占3个字节<br>
+截取字符串：<br>
+set name helloworld ; getrange name 2 4//返回 llo</p>
+<h3>2.2数据结构-哈希(hash)</h3>
+<p>哈希hash是一个string类型的field和value的映射表，hash特适合用于存储对象<br>
+命令  hset key field value<br>
+设值：hset user:1 name james         //成功返回1，失败返回0<br>
+取值：hget user:1 name              //返回james<br>
+删值：hdel user:1 age               //返回删除的个数<br>
+计算个数：hset user:1 name james; hset user:1 age 23;<br>
+hlen user:1  //返回2，user:1有两个属性值<br>
+批量设值：hmset user:2 name james age 23 sex boy //返回OK<br>
+批量取值：hmget user:2 name age sex  //返回三行：james 23 boy<br>
+判断field是否存在：hexists user:2 name //若存在返回1，不存在返回0<br>
+获取所有field: hkeys user:2    // 返回name age sex三个field<br>
+获取user:2所有value：hvals user:2     // 返回james 23 boy<br>
+获取user:2所有field与value：hgetall user:2 //name age sex james 23 boy值<br>
+增加1：hincrby user:2 age 1      //age+1<br>
+hincrbyfloat user:2 age 2   //浮点型加2</p>
+<p>使用hash类型存储数据<br>
+hmset user:1 name james age 23 sex boy
+优点：简单直观，使用合理可减少内存空间消耗
+缺点：要控制ziplist与hashtable两种编码转换，且hashtable会消耗更多内存erialize(userInfo);</p>
+<h3>2.3数据结构-列表(list)</h3>
+<p>用来存储多个有序的字符串，一个列表最多可存2的32次方减1个元素
+<img src="https://gitee.com/cpw/commonimage/raw/master/QQ20190420-153505@2x.png" alt="">
+因为有序，可以通过索引下标获取元素或某个范围内元素列表，
+列表元素可以重复</p>
+<h4>添加命令：</h4>
+<p>rpush james c b a //从右向左插入cba, 返回值3<br>
+lrange james 0 -1 //从左到右获取列表所有元素 返回 c b a<br>
+lpush key c b a //从左向右插入cba<br>
+linsert james before b teacher //在b之前插入teacher, after为之后，使用lrange james 0 -1 查看：c teacher b a</p>
+<h4>查找命令：</h4>
+<p>lrange key start end //索引下标特点：从左到右为0到N-1<br>
+lindex james -1 //返回最右末尾a，-2返回b<br>
+llen james        //返回当前列表长度<br>
+lpop james       //把最左边的第一个元素c删除<br>
+rpop james      //把最右边的元素a删除</p>
+<h3>2.4数据结构-集合(Set)</h3>
+<p>用户标签，社交，查询有共同兴趣爱好的人,智能推荐
+保存多元素，与列表不一样的是不允许有重复元素，且集合是无序，一个集合最多可存2的32次方减1个元素，除了支持增删改查，还支持集合交集、并集、差集；
+<img src="https://gitee.com/cpw/commonimage/raw/master/QQ20190420-153849@2x.png" alt=""></p>
+<p>exists user    //检查user键值是否存在<br>
+sadd user a b c//向user插入3个元素，返回3<br>
+sadd user a b  //若再加入相同的元素，则重复无效，返回0<br>
+smember user //获取user的所有元素,返回结果无序<br>
+srem user a   //返回1，删除a元素<br>
+scard user    //返回2，计算元素个数</p>
+<h3>2.5数据结构-有序集合(Zset)</h3>
+<p>常用于排行榜，如视频网站需要对用户上传视频做排行榜，或点赞数
+与集合有联系，不能有重复的成员
+<img src="https://gitee.com/cpw/commonimage/raw/master/QQ20190420-154121@2x.png" alt=""></p>
+<h4>命令</h4>
+<p>指令：<br>
+zadd key score member [score member......]<br>
+zadd user:zan 200 james //james的点赞数1, 返回操作成功的条数1<br>
+zadd user:zan 200 james 120 mike 100 lee// 返回3<br>
+zadd test:1 nx 100 james   //键test:1必须不存在，主用于添加<br>
+zadd test:1 xx incr 200 james   //键test:1必须存在，主用于修改,此时为300<br>
+zadd test:1 xx ch incr -299 james //返回操作结果1，300-299=1<br>
+zrange test:1 0 -1 withscores  //查看点赞（分数）与成员名<br>
+zcard test:1     //计算成员个数， 返回1<br>
+排名场景：<br>
+zadd user:3 200 james 120 mike 100 lee//先插入数据<br>
+zrange user:3 0 -1 withscores //查看分数与成员<br>
+zrank user:3 james  //返回名次：第3名返回2，从0开始到2，共3名<br>
+zrevrank user:3 james //返回0， 反排序，点赞数越高，排名越前</p>
+<h4>应用场景</h4>
+<p>排行榜系统，如视频网站需要对用户上传的视频做排行榜<br>
+点赞数：<br>
+zadd user:1:20180106 3 mike  //mike获得3个赞<br>
+再获一赞：<br>
+zincrby user:1:20180106 1 mike  //在3的基础上加1<br>
+用户作弊，将用户从排行榜删掉：<br>
+zrem user:1:20180106 mike<br>
+展示赞数最多的5个用户：<br>
+zrevrangebyrank user:1:20180106  0  4<br>
+查看用户赞数与排名：<br>
+zscore user:1:20180106 mike   zrank user:1:20180106 mike</p>
+<h4>与LIST和SET对比</h4>
+<p><img src="https://gitee.com/cpw/commonimage/raw/master/QQ20190420-154307@2x.png" alt=""></p>
+<h3>2.6Redis全局命令</h3>
+<p>1，查看所有键：<br>
+keys *   set school enjoy   set hello world<br>
+2，键总数 ：<br>
+dbsize       //2个键，如果存在大量键，线上禁止使用此指令<br>
+3，检查键是否存在：<br>
+exists key  //存在返回1，不存在返回0<br>
+4，删除键：<br>
+del key      //del hello school, 返回删除键个数，删除不存在键返回0<br>
+5，键过期：<br>
+expire key seconds        //set name test<br>
+expire name 10,表示10秒过期<br>
+ttl key                            // 查看剩余的过期时间<br>
+6，键的数据结构类型：<br>
+type key //type hello     //返回string,键不存在返回none</p>
+<h3>2.7Redis数据库管理</h3>
+<p>select 0    选择第一个数据库<br>
+flushdb     清空当前数据库数据<br>
+flushall    清空所有数据库数据<br>
+dbsize      返回当前数据库Key的数量</p>
+<h2>3.Redis持久化</h2>
+<p>redis是一个支持持久化的内存数据库,也就是说redis需要经常将内存中的数据同步到磁盘来保证持久化，持久化可以避免因进程退出而造成数据丢失.<br>
+redis持久化有两种方式 RDB和AOF.</p>
+<h3>3.1RDB持久化</h3>
+<h4>原理</h4>
+<p>RDB持久化把当前进程数据生成快照（.rdb）文件保存到硬盘的过程，有手动触发和自动触发.<br>
+手动触发有save和bgsave两命令<br>
+save命令：阻塞当前Redis，直到RDB持久化过程完成为止，若内存实例比较大会造成长时间阻塞，线上环境不建议用它<br>
+bgsave命令：redis进程执行fork操作创建子线程，由子线程完成持久化，阻塞时间很短（微秒级），是save的优化,在执行redis-cli shutdown关闭redis服务时，如果没有开启AOF持久化，自动执行bgsave;<br>
+<img src="https://gitee.com/cpw/commonimage/raw/master/QQ20190420-160510@2x.png" alt=""></p>
+<h4>操作</h4>
+<p>命令：config set dir /usr/local  //设置rdb文件保存路径<br>
+备份：bgsave  <a href="//xn--dump-fw9g.xn--rdbusr-rd0ju2nz0y/local%E4%B8%8B">//将dump.rdb保存到usr/local下</a><br>
+恢复：将dump.rdb放到redis安装目录与redis.conf同级目录，重启redis即可<br>
+优点：<br>
+1，压缩后的二进制文，适用于备份、全量复制，用于灾难恢复<br>
+2，加载RDB恢复数据远快于AOF方式<br>
+缺点：
+1，无法做到实时持久化，每次都要创建子进程，频繁操作成本过高<br>
+2，保存后的二进制文件，存在老版本不兼容新版本rdb文件的问题</p>
+<h3>3.2AOF持久化</h3>
+<p>针对RDB不适合实时持久化，redis提供了AOF持久化方式来解决<br>
+开启：redis.conf设置：appendonly yes  (默认不开启，为no)<br>
+默认文件名：appendfilename &quot;appendonly.aof&quot;</p>
+<h4>原理</h4>
+<p>流程说明：<br>
+1，所有的写入命令(set hset)会append追加到aof_buf缓冲区中<br>
+2，AOF缓冲区向硬盘做sync同步<br>
+3，随着AOF文件越来越大，需定期对AOF文件rewrite重写，达到压缩<br>
+4，当redis服务重启，可load加载AOF文件进行恢复<br>
+<img src="https://gitee.com/cpw/commonimage/raw/master/QQ20190420-161424@2x.png" alt="">
+命令写入(append), 文件同步(sync), 文件重写(rewrite), 重启加载(load)</p>
+<h4>配置详解</h4>
+<p>appendonly yes           //启用aof持久化方式<br>
+// appendfsync always //每收到写命令就立即强制写入磁盘，最慢的，但是保证完全的持久化，不推荐使用<br>
+appendfsync everysec //每秒强制写入磁盘一次，性能和持久化方面做了折中，推荐<br>
+// appendfsync no         //完全依赖os，性能最好,持久化没保证（操作系统自身的同步）<br>
+no-appendfsync-on-rewrite  yes  //正在导出rdb快照的过程中,要不要停止同步aof<br>
+auto-aof-rewrite-percentage 100  //aof文件大小比起上次重写时的大小,增长率100%时,重写<br>
+auto-aof-rewrite-min-size 64mb   //aof文件,至少超过64M时,重写</p>
+<h4>AOF存储方式</h4>
+<p>AOF文件存储使用RESP协议
+<img src="https://gitee.com/cpw/commonimage/raw/master/QQ20190420-163822@2x.png" alt=""></p>
+<h4>AOF如何恢复</h4>
+<ol>
+<li>设置appendonly yes；</li>
+<li>将appendonly.aof放到dir参数指定的目录；</li>
+<li>启动Redis，Redis会自动加载appendonly.aof文件。</li>
+</ol>
+<h3>3.3Redis重启时加载AOF与RDB的顺序？</h3>
+<p>1，当AOF和RDB文件同时存在时，优先加载AOF<br>
+2，若关闭了AOF，加载RDB文件<br>
+3，加载AOF/RDB成功，redis重启成功<br>
+4，AOF/RDB存在错误，启动失败打印错误信息<br>
+<img src="https://gitee.com/cpw/commonimage/raw/master/QQ20190420-161920@2x.png" alt=""></p>
+</div></section><footer class="footer-container"><div class="footer-body"><img src="/img/dubbo_gray.png"/><div class="cols-container"><div class="col col-12"><h3>免责声明</h3><p>免责声明的具体内容</p></div><div class="col col-6"><dl><dt>文档</dt><dd><a href="/zh-cn/docs/demo1.html" target="_self">概览</a></dd><dd><a href="/zh-cn/docs/demo2.html" target="_self">快速开始</a></dd><dd><a href="/zh-cn/docs/dir/demo3.html" target="_self">开发者指南</a></dd></dl></div><div class="col col-6"><dl><dt>资源</dt><dd><a href="/zh-cn/blog/index.html" target="_self">博客</a></dd><dd><a href="/zh-cn/community/index.html" target="_self">社区</a></dd></dl></div></div><div class="copyright"><span>Copyright © 2018 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span></div></div></footer></div></div>
+	<script src="https://f.alicdn.com/react/15.4.1/react-with-addons.min.js"></script>
+	<script src="https://f.alicdn.com/react/15.4.1/react-dom.min.js"></script>
+	<script>
+		window.rootPath = '';
+  </script>
+	<script src="/build/documentation.js"></script>
+</body>
+</html>
