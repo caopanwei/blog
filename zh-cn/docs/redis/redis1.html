@@ -13,6 +13,71 @@
 </head>
 <body>
 	<div id="root"><div class="documentation-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/zh-cn/index.html"><img class="logo" src="/img/dubbo_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">En</span><div class="header-menu"><img class="header-menu-toggle" src="/img/system/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/zh-cn/index.html" target="_self">首页</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/zh-cn/docs/demo1.html" target="_self">文档</a></li><li class="menu-item menu-item-normal"><a href="/zh-cn/blog/index.html" target="_self">博客</a></li><li class="menu-item menu-item-normal"><a href="/zh-cn/community/index.html" target="_self">社区</a></li></ul></div></div></header><div class="bar"><div class="bar-body"><img src="/img/system/docs.png" class="front-img"/><span>文档</span><img src="/img/system/docs.png" class="back-img"/></div></div><section class="content-section"><div class="sidemenu"><div class="sidemenu-toggle"><img src="https://img.alicdn.com/tfs/TB1E6apXHGYBuNjy0FoXXciBFXa-200-200.png"/></div><ul><li class="menu-item menu-item-level-1"><span>技术专题</span><ul><li style="height:180px;overflow:hidden" class="menu-item menu-item-level-2"><span>redis<img style="transform:rotate(0deg)" class="menu-toggle" src="/img/system/arrow_down.png"/></span><ul><li class="menu-item menu-item-level-3"><a href="/zh-cn/docs/redis/redis1.html" target="_self">1.Redis从基础到进阶</a></li><li class="menu-item menu-item-level-3"><a href="/zh-cn/docs/redis/redis2.html" target="_self">2.Redis主从模式详解</a></li><li class="menu-item menu-item-level-3"><a href="/zh-cn/docs/redis/redis3.html" target="_self">3.Redis哨兵机制详解</a></li><li class="menu-item menu-item-level-3"><a href="/zh-cn/docs/redis/redis4.html" target="_self">4.Redis高可用集群RedisCluster详解</a></li></ul></li></ul></li><li class="menu-item menu-item-level-1"><span>面试专题</span><ul></ul></li></ul></div><div class="doc-content markdown-body"><h1>Redis从基础到进阶</h1>
+<!-- TOC -->
+<ul>
+<li><a href="#redis%E4%BB%8E%E5%9F%BA%E7%A1%80%E5%88%B0%E8%BF%9B%E9%98%B6">Redis从基础到进阶</a>
+<ul>
+<li><a href="#1redis%E4%BB%8B%E7%BB%8D%E5%8F%8A%E5%85%A5%E9%97%A8">1.Redis介绍及入门</a>
+<ul>
+<li><a href="#11-redis%E6%98%AF%E4%BB%80%E4%B9%88">1.1 Redis是什么?</a></li>
+<li><a href="#12redis%E7%89%B9%E6%80%A7">1.2Redis特性</a></li>
+<li><a href="#13%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF">1.3使用场景</a></li>
+<li><a href="#14redis%E5%AE%89%E8%A3%85">1.4Redis安装</a></li>
+<li><a href="#15redis%E9%85%8D%E7%BD%AE%E5%90%AF%E5%8A%A8%E6%93%8D%E4%BD%9C%E5%85%B3%E9%97%AD">1.5Redis配置、启动、操作、关闭</a></li>
+</ul>
+</li>
+<li><a href="#2redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%8F%8A%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4">2.Redis数据结构及常用命令</a>
+<ul>
+<li><a href="#21%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%AD%97%E7%AC%A6%E4%B8%B2string">2.1数据结构-字符串(String)</a>
+<ul>
+<li><a href="#%E8%AE%BE%E5%80%BC%E5%91%BD%E4%BB%A4">设值命令</a></li>
+<li><a href="#%E8%8E%B7%E5%80%BC%E5%91%BD%E4%BB%A4">获值命令</a></li>
+<li><a href="#%E8%AE%A1%E6%95%B0">计数</a></li>
+<li><a href="#%E8%BF%BD%E5%8A%A0">追加</a></li>
+</ul>
+</li>
+<li><a href="#22%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%93%88%E5%B8%8Chash">2.2数据结构-哈希(hash)</a></li>
+<li><a href="#23%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%88%97%E8%A1%A8list">2.3数据结构-列表(list)</a>
+<ul>
+<li><a href="#%E6%B7%BB%E5%8A%A0%E5%91%BD%E4%BB%A4">添加命令：</a></li>
+<li><a href="#%E6%9F%A5%E6%89%BE%E5%91%BD%E4%BB%A4">查找命令：</a></li>
+</ul>
+</li>
+<li><a href="#24%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E9%9B%86%E5%90%88set">2.4数据结构-集合(Set)</a></li>
+<li><a href="#25%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88zset">2.5数据结构-有序集合(Zset)</a>
+<ul>
+<li><a href="#%E5%91%BD%E4%BB%A4">命令</a></li>
+<li><a href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF">应用场景</a></li>
+<li><a href="#%E4%B8%8Elist%E5%92%8Cset%E5%AF%B9%E6%AF%94">与LIST和SET对比</a></li>
+</ul>
+</li>
+<li><a href="#26redis%E5%85%A8%E5%B1%80%E5%91%BD%E4%BB%A4">2.6Redis全局命令</a></li>
+<li><a href="#27redis%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AE%A1%E7%90%86">2.7Redis数据库管理</a></li>
+</ul>
+</li>
+<li><a href="#3redis%E6%8C%81%E4%B9%85%E5%8C%96">3.Redis持久化</a>
+<ul>
+<li><a href="#31rdb%E6%8C%81%E4%B9%85%E5%8C%96">3.1RDB持久化</a>
+<ul>
+<li><a href="#%E5%8E%9F%E7%90%86">原理</a></li>
+<li><a href="#%E6%93%8D%E4%BD%9C">操作</a></li>
+</ul>
+</li>
+<li><a href="#32aof%E6%8C%81%E4%B9%85%E5%8C%96">3.2AOF持久化</a>
+<ul>
+<li><a href="#%E5%8E%9F%E7%90%86-1">原理</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AE%E8%AF%A6%E8%A7%A3">配置详解</a></li>
+<li><a href="#aof%E5%AD%98%E5%82%A8%E6%96%B9%E5%BC%8F">AOF存储方式</a></li>
+<li><a href="#aof%E5%A6%82%E4%BD%95%E6%81%A2%E5%A4%8D">AOF如何恢复</a></li>
+</ul>
+</li>
+<li><a href="#33redis%E9%87%8D%E5%90%AF%E6%97%B6%E5%8A%A0%E8%BD%BDaof%E4%B8%8Erdb%E7%9A%84%E9%A1%BA%E5%BA%8F">3.3Redis重启时加载AOF与RDB的顺序？</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<!-- /TOC -->
 <h2>1.Redis介绍及入门</h2>
 <h3>1.1 Redis是什么?</h3>
 <p>Redis是一个开源的使用ANSI C语言编写、支持网络、可基于内存亦可持久化的日志型、Key-Value数据库，并提供多种语言的API

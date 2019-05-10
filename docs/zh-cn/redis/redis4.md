@@ -1,5 +1,18 @@
 # Redis高可用集群RedisCluster详解
+<!-- TOC -->
 
+- [Redis高可用集群RedisCluster详解](#redis高可用集群rediscluster详解)
+    - [1.简介及原理](#1简介及原理)
+        - [1.1什么是RedisCluster?](#11什么是rediscluster)
+        - [1.2分布式数据库概念](#12分布式数据库概念)
+        - [1.3分区规则](#13分区规则)
+        - [1.4虚拟槽分区](#14虚拟槽分区)
+        - [1.5槽、键、数据关系](#15槽键数据关系)
+        - [1.6RedisCluster的缺陷](#16rediscluster的缺陷)
+    - [2.集群环境搭建](#2集群环境搭建)
+    - [3.集群节点通信－Gossip协议](#3集群节点通信gossip协议)
+
+<!-- /TOC -->
 ## 1.简介及原理
 ### 1.1什么是RedisCluster?
 RedisCluster是Redis的分布式解决方案，在3.0版本后推出的方案，有效地解决了Redis分布式的需求，当遇到单机内存、并发等瓶颈时，可使用此方案来解决这些问题.  
